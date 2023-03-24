@@ -1,6 +1,6 @@
 # Send notifications from your GitHub workflows
 
-Use this GitHub action to inform yourself or your team about activity in your repository. Think of use cases like:
+Use this GitHub action to inform yourself or your team about activity in your repository through the Ping VSCode extension. Think of use cases like:
 
 - sending your team a notification when an issue is labelled `critical`
 - sending devops a notification when a deployment fails
@@ -11,33 +11,26 @@ Use this GitHub action to inform yourself or your team about activity in your re
 ## Usage
 
 ```yaml
-name: 'Notify Me'
+name: 'Notify on Pulls'
 on: pull_request
 
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Notification
-        uses: magicbell-io/action/notify@v1
+      - name: Send PR Notification
+        uses: giorgiogross/ping-action/notify@v0.0.1
         with:
-          api-key: ${{ secrets.MAGICBELL_API_KEY }}
-          api-secret: ${{ secrets.MAGICBELL_API_SECRET }} 
-          recipients: 'person@example.com, bot@example.com'
-          title: 'Activity on pull ${{ github.event.number }}!'
+          recipients: 'giorgiogross'
+          title: 'Workflow Action'
+          content: 'A new PR was created: ${{ github.event.number }}!'
+          category: 'Info'
+          icon-url: 'https://magicbell.gallerycdn.vsassets.io/extensions/magicbell/ping-code/0.0.8/1679072790319/Microsoft.VisualStudio.Services.Icons.Default'
 ```
 
 ## Inputs
 
 The `notify` action accepts a number of options. The following options are required for all calls:
-
-- **api-key** _String_
-  
-  Your project api key which can be found on the MagicBell Dashboard. This key is required for all calls.
-
-- **api-secret** _String_
-
-  Your project api secret which can be found on the MagicBell Dashboard. This key is required for project oriented endpoints.
 
 - **title** _String_
 
@@ -66,128 +59,6 @@ The following options are optional:
 
   The URL to which the notification will link to.
 
-- **custom-attributes** _JSON_
+- **icon-url** _String_
 
-  A JSON string of custom attributes to be attached to the notification. Tip; use the GitHub `${{ toJson(...) }}` helper.
-
-- **overrides** _JSON_
-
-  A JSON string of delivery overrides to be attached to the notification. Tip; use the GitHub `${{ toJson(...) }}` helper.
-
-## Recipes
-
-### Sending the contributor a notification on push
-
-```yaml
-name: 'Notify Contributor'
-
-on: push
-
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Notification
-        uses: magicbell-io/action/notify@v1
-        with: # api-key, api-secret, recipients and title are required.
-          api-key: ${{ secrets.MAGICBELL_API_KEY }}
-          api-secret: ${{ secrets.MAGICBELL_API_SECRET }}
-          recipients: '${{ github.event.pusher.email }}'
-          title: 'Thanks for pushing!'
-```
-
-### Sending a notification on pull request activity
-
-```yaml
-name: 'Notify on pull request'
-
-on: pull_request
-
-jobs:
-  notify:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Notification
-        uses: magicbell-io/action/notify@v1
-        with: # api-key, api-secret, recipients and title are required.
-          api-key: ${{ secrets.MAGICBELL_API_KEY }}
-          api-secret: ${{ secrets.MAGICBELL_API_SECRET }} 
-          recipients: '${{ secrets.MY_EMAIL }}'
-          title: 'Activity on pull ${{ github.event.number }}!'
-          action-url: 'https://github.com/${{ github.repository }}/pulls/${{ github.event.number }}'
-```
-
-### Sending a notification when publishing a release
-
-```yaml
-name: On Release
-
-on:
-  release:
-    types: [published]
-
-jobs:
-  notify:
-    name: Send Release Notes
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Send Notification
-        uses: magicbell-io/action/notify@v1
-        with:
-          api-key: ${{ secrets.MAGICBELL_API_KEY }}
-          api-secret: ${{ secrets.MAGICBELL_API_SECRET }}
-          recipients: ${{ secrets.MY_EMAIL }}
-          title: 'Just Released: ${{ github.event.release.name }}!'
-          content: ${{ github.event.release.body }}
-          action-url: ${{ github.event.release.html_url }}
-```
-
-### Sending a notification when an issue gets created
-
-```yaml
-name: On Issue Created
-
-on:
-  issues:
-    types: [opened]
-
-jobs:
-  notify-me:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send Notification
-        uses: magicbell-io/action/notify@main
-        with:
-          api-key: ${{ secrets.MAGICBELL_API_KEY }}
-          api-secret: ${{ secrets.MAGICBELL_API_SECRET }}
-          recipients: '${{ secrets.MY_EMAIL }}'
-          title: 'Issue created: ${{ github.event.issue.number }} - ${{ github.event.issue.title }}'
-          content: ${{ github.event.issue.body }}
-          action-url: ${{ github.event.issue.html_url }}
-          custom-attributes: ${{ toJSON(github.event.issue) }}
-```
-
-### Sending a notification when an issue gets labelled
-
-```yaml
-name: On Issue Labeled Critical
-
-on:
-  issues:
-    types: [labeled]
-
-jobs:
-  notify:
-    if: github.event.label.name == 'critical'
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Send Notification
-        uses: magicbell-io/action/notify@v1
-        with:
-          api-key: ${{ secrets.MAGICBELL_API_KEY }}
-          api-secret: ${{ secrets.MAGICBELL_API_SECRET }}
-          recipients: ${{ secrets.MY_EMAIL }}
-          title: 'Issue declared critical: ${{ github.event.issue.number }} - ${{ github.event.issue.title }}'
-```
+  The URL to an icon displayed in Ping VSCode extension.
