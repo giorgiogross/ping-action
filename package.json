@@ -8,7 +8,8 @@
   "scripts": {
     "lint": "eslint src/**/*.ts",
     "build": "tsx scripts/build.ts",
-    "test": "jest",
+    "test": "jest -- notify.unit.test.ts",
+    "test:integration": "jest -- notify.integration.test.ts",
     "prepare": "husky install"
   },
   "lint-staged": {
@@ -30,10 +31,12 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@vercel/ncc": "^0.36.0",
-    "magicbell": "^1.0.1"
+    "magicbell": "^1.0.1",
+    "node-fetch": "^2"
   },
   "devDependencies": {
     "@types/node": "^18.11.0",
+    "@types/node-fetch": "^2",
     "@typescript-eslint/eslint-plugin": "^5.46.0",
     "@typescript-eslint/parser": "^4.33.0",
     "eslint": "^7.32.0",

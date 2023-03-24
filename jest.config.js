@@ -1,9 +1,10 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  clearMocks: true,
-  moduleFileExtensions: ['js', 'ts'],
-  testMatch: ['**/*.test.ts'],
+  preset: 'ts-jest',
+  testEnvironment: 'node',
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  verbose: true,
+  transformIgnorePatterns: ['/node_modules/', '\\.pnp\\.[^\\/]+$'],
+  collectCoverageFrom: ['src/**/*.ts'],
 };
